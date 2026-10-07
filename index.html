@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
     <title>Voxel Game</title>
     <style>
       html, body {
@@ -13,6 +16,13 @@
         overflow: hidden;
         background: #000;
         font-family: system-ui, sans-serif;
+        overscroll-behavior: none;
+        /* Prevent iOS/iPadOS from treating drags as text selection, callouts,
+           or pull-to-refresh/scroll while playing. */
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        touch-action: none;
       }
       #app {
         width: 100%;
@@ -21,6 +31,7 @@
       }
       canvas {
         display: block;
+        touch-action: none;
       }
       #crosshair {
         position: absolute;
@@ -42,6 +53,7 @@
         display: flex;
         gap: 6px;
         pointer-events: none;
+        z-index: 20;
       }
       .slot {
         width: 40px;
@@ -54,6 +66,8 @@
         color: #fff;
         font-size: 11px;
         border-radius: 4px;
+        pointer-events: auto;
+        cursor: pointer;
       }
       .slot.active {
         border-color: #fff;
@@ -71,7 +85,8 @@
         text-align: center;
         gap: 12px;
         cursor: pointer;
-        z-index: 10;
+        z-index: 30;
+        padding: 20px;
       }
       #overlay h1 {
         margin: 0;
@@ -84,6 +99,15 @@
         max-width: 480px;
         line-height: 1.5;
         font-size: 14px;
+      }
+      #overlay .touch-only {
+        display: none;
+      }
+      body.touch-mode #overlay .mouse-only {
+        display: none;
+      }
+      body.touch-mode #overlay .touch-only {
+        display: block;
       }
       #overlay.hidden {
         display: none;
@@ -99,6 +123,80 @@
         border-radius: 4px;
         pointer-events: none;
         line-height: 1.5;
+        z-index: 20;
+      }
+
+      /* ===== Touch controls ===== */
+      #touch-controls {
+        position: absolute;
+        inset: 0;
+        display: none;
+        z-index: 15;
+      }
+      body.touch-mode #touch-controls {
+        display: block;
+      }
+      #look-layer {
+        position: absolute;
+        inset: 0;
+      }
+      #joystick {
+        position: absolute;
+        left: max(24px, env(safe-area-inset-left));
+        bottom: max(24px, env(safe-area-inset-bottom));
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        z-index: 20;
+      }
+      #joystick-knob {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 56px;
+        height: 56px;
+        margin: -28px 0 0 -28px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.55);
+        border: 2px solid rgba(255, 255, 255, 0.8);
+      }
+      .touch-btn {
+        position: absolute;
+        z-index: 20;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.16);
+        border: 2px solid rgba(255, 255, 255, 0.45);
+        color: #fff;
+        font-size: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .touch-btn:active {
+        background: rgba(255, 255, 255, 0.32);
+      }
+      #btn-jump {
+        right: max(24px, env(safe-area-inset-right));
+        bottom: max(120px, calc(env(safe-area-inset-bottom) + 120px));
+        width: 72px;
+        height: 72px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      #btn-place {
+        right: max(110px, calc(env(safe-area-inset-right) + 110px));
+        bottom: max(24px, env(safe-area-inset-bottom));
+        width: 64px;
+        height: 64px;
+      }
+      #btn-break {
+        right: max(24px, env(safe-area-inset-right));
+        bottom: max(24px, env(safe-area-inset-bottom));
+        width: 64px;
+        height: 64px;
       }
     </style>
   </head>
@@ -106,15 +204,29 @@
     <div id="app">
       <div id="overlay">
         <h1>Voxel Game</h1>
-        <p>
+        <p class="mouse-only">
           Click to play. WASD to move, Space to jump, Shift to sprint.<br />
           Left click to break a block, right click to place one.<br />
-          1-5 to pick a block, Esc to release the mouse.
+          1-7 to pick a block, Esc to release the mouse.
+        </p>
+        <p class="touch-only">
+          แตะหน้าจอเพื่อเริ่มเล่น<br />
+          จอยสติ๊กซ้ายล่าง = เดิน &nbsp;|&nbsp; ลากหน้าจอ = มองรอบตัว<br />
+          ปุ่ม ⛏ = ทุบบล็อก &nbsp;|&nbsp; ปุ่ม ➕ = วางบล็อก &nbsp;|&nbsp; ปุ่ม JUMP = กระโดด<br />
+          แตะช่องด้านล่างเพื่อเลือกชนิดบล็อก
         </p>
       </div>
       <div id="crosshair"></div>
       <div id="stats"></div>
       <div id="hud"></div>
+
+      <div id="touch-controls">
+        <div id="look-layer"></div>
+        <div id="joystick"><div id="joystick-knob"></div></div>
+        <button id="btn-jump" class="touch-btn">JUMP</button>
+        <button id="btn-place" class="touch-btn">➕</button>
+        <button id="btn-break" class="touch-btn">⛏</button>
+      </div>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>

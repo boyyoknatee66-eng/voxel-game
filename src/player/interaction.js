@@ -62,6 +62,12 @@ export class Interaction {
       el.textContent = `${i + 1}`;
       el.title = data.name;
       el.style.background = `#${data.colors.top.toString(16).padStart(6, '0')}`;
+      // Works for both mouse clicks and touch taps, so the hotbar is
+      // selectable without a keyboard on phones/tablets.
+      el.addEventListener('click', () => {
+        this.selectedIndex = i;
+        this._refreshHud();
+      });
       this.hud.appendChild(el);
       return el;
     });

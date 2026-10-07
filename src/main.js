@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { World } from './world/world.js';
 import { Player } from './player/player.js';
 import { Interaction } from './player/interaction.js';
+import { TouchControls, isTouchDevice } from './player/touch-controls.js';
 
 const app = document.getElementById('app');
 const overlay = document.getElementById('overlay');
@@ -58,9 +59,28 @@ player.spawnAt(8, 8);
 
 const interaction = new Interaction(scene, camera, world, renderer.domElement);
 
-// --- Pointer lock / overlay ----------------------------------------------
+// --- Touch support (phones/tablets, including iPad) ------------------------
+// There's no mouse or keyboard on these devices, so pointer lock never
+// applies. Instead, tapping the overlay just starts the game, and an
+// on-screen joystick/buttons drive movement, look and block interaction.
 
-overlay.addEventListener('click', () => player.lock());
+const touch = isTouchDevice();
+if (touch) {
+  document.body.classList.add('touch-mode');
+  // eslint-disable-next-line no-new
+  new TouchControls(player, interaction);
+}
+
+// --- Start overlay ---------------------------------------------------------
+
+overlay.addEventListener('click', () => {
+  if (touch) {
+    player.activateTouch();
+    overlay.classList.add('hidden');
+  } else {
+    player.lock();
+  }
+});
 player.controls.addEventListener('lock', () => overlay.classList.add('hidden'));
 player.controls.addEventListener('unlock', () => overlay.classList.remove('hidden'));
 
@@ -84,7 +104,7 @@ function animate() {
 
   const dt = Math.min(clock.getDelta(), 0.1);
 
-  if (player.isLocked()) {
+  if (player.isActive()) {
     player.update(dt);
     interaction.update();
   }
