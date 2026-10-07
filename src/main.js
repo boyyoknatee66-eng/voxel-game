@@ -4,6 +4,7 @@ import { Player } from './player/player.js';
 import { Interaction } from './player/interaction.js';
 import { TouchControls, isTouchDevice } from './player/touch-controls.js';
 import { AnimalManager } from './world/animals.js';
+import { ISLAND_CENTER } from './world/terrain.js';
 
 const app = document.getElementById('app');
 const overlay = document.getElementById('overlay');
@@ -56,16 +57,16 @@ scene.add(player.getObject());
 world.streamChunks(0, 0);
 world.processBuildQueue();
 while (world.buildQueue.length > 0) world.processBuildQueue();
-player.spawnAt(8, 8);
+player.spawnAt(ISLAND_CENTER.x, ISLAND_CENTER.z);
 
 const interaction = new Interaction(scene, camera, world, renderer.domElement);
 
 // --- Animals -----------------------------------------------------------
-// Ambient wildlife around the player's starting spot: a lion and a few
-// frogs that wander within a short radius of where they spawned.
+// Ambient wildlife on the starting island: a lion and a few frogs that
+// wander within a short radius of the player's spawn point.
 
 const animals = new AnimalManager(world, scene);
-animals.spawnAround(8, 8, { lion: 1, frog: 3 });
+animals.spawnAround(ISLAND_CENTER.x, ISLAND_CENTER.z, { lion: 1, frog: 3 });
 
 // --- Touch support (phones/tablets, including iPad) ------------------------
 // There's no mouse or keyboard on these devices, so pointer lock never
