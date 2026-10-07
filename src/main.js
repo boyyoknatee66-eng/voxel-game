@@ -3,6 +3,7 @@ import { World } from './world/world.js';
 import { Player } from './player/player.js';
 import { Interaction } from './player/interaction.js';
 import { TouchControls, isTouchDevice } from './player/touch-controls.js';
+import { AnimalManager } from './world/animals.js';
 
 const app = document.getElementById('app');
 const overlay = document.getElementById('overlay');
@@ -59,6 +60,13 @@ player.spawnAt(8, 8);
 
 const interaction = new Interaction(scene, camera, world, renderer.domElement);
 
+// --- Animals -----------------------------------------------------------
+// Ambient wildlife around the player's starting spot: a lion and a few
+// frogs that wander within a short radius of where they spawned.
+
+const animals = new AnimalManager(world, scene);
+animals.spawnAround(8, 8, { lion: 1, frog: 3 });
+
 // --- Touch support (phones/tablets, including iPad) ------------------------
 // There's no mouse or keyboard on these devices, so pointer lock never
 // applies. Instead, tapping the overlay just starts the game, and an
@@ -110,6 +118,7 @@ function animate() {
   }
 
   world.update(player.position);
+  animals.update(dt);
 
   // Keep the sun's shadow frustum following the player so shadows stay
   // sharp without covering the whole world.
