@@ -13,6 +13,11 @@ export const BLOCK = {
   LEAVES: 6,
   WATER: 7,
   SNOW: 8,
+  PATH: 9,
+  PALM_WOOD: 10,
+  PALM_LEAVES: 11,
+  MANGO_LEAVES: 12,
+  MANGOSTEEN_LEAVES: 13,
 };
 
 // top, bottom, side
@@ -66,6 +71,36 @@ export const BLOCK_DATA = {
     colors: colorSet(0xf0f4f8, 0xf0f4f8, 0xf0f4f8),
     solid: true,
     transparent: false,
+  },
+  [BLOCK.PATH]: {
+    name: 'Path',
+    colors: colorSet(0xd9c08f, 0xc9ad78, 0xcfb482),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.PALM_WOOD]: {
+    name: 'Palm Wood',
+    colors: colorSet(0x9c7a4a, 0x9c7a4a, 0x8a6a3e),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.PALM_LEAVES]: {
+    name: 'Palm Leaves',
+    colors: colorSet(0x5cb33e, 0x5cb33e, 0x5cb33e),
+    solid: true,
+    transparent: true,
+  },
+  [BLOCK.MANGO_LEAVES]: {
+    name: 'Mango Leaves',
+    colors: colorSet(0x2f6b2a, 0x2f6b2a, 0x2f6b2a),
+    solid: true,
+    transparent: true,
+  },
+  [BLOCK.MANGOSTEEN_LEAVES]: {
+    name: 'Mangosteen Leaves',
+    colors: colorSet(0x1f4d33, 0x1f4d33, 0x1f4d33),
+    solid: true,
+    transparent: true,
   },
 };
 

@@ -4,7 +4,7 @@ import { Player } from './player/player.js';
 import { Interaction } from './player/interaction.js';
 import { TouchControls, isTouchDevice } from './player/touch-controls.js';
 import { AnimalManager } from './world/animals.js';
-import { ISLAND_CENTER } from './world/terrain.js';
+import { SPAWN_POINT } from './world/zoo.js';
 
 const app = document.getElementById('app');
 const overlay = document.getElementById('overlay');
@@ -48,7 +48,10 @@ scene.add(ambient);
 
 // --- World / player ----------------------------------------------------
 
-const world = new World(scene, { viewDistance: 5, seed: 1337 });
+// viewDistance is bigger than before so the whole ~200-block zoo island
+// (pond + all the exhibit zones) is generated and visible around spawn,
+// not just the immediate area.
+const world = new World(scene, { viewDistance: 8, seed: 1337 });
 const player = new Player(camera, renderer.domElement, world);
 scene.add(player.getObject());
 
@@ -57,16 +60,16 @@ scene.add(player.getObject());
 world.streamChunks(0, 0);
 world.processBuildQueue();
 while (world.buildQueue.length > 0) world.processBuildQueue();
-player.spawnAt(ISLAND_CENTER.x, ISLAND_CENTER.z);
+player.spawnAt(SPAWN_POINT.x, SPAWN_POINT.z);
 
 const interaction = new Interaction(scene, camera, world, renderer.domElement);
 
 // --- Animals -----------------------------------------------------------
-// Ambient wildlife on the starting island: a lion and a few frogs that
-// wander within a short radius of the player's spawn point.
+// The full zoo: land animals in their exhibit zones around the pond,
+// aquatic animals in the pond, and insects in the garden zone.
 
 const animals = new AnimalManager(world, scene);
-animals.spawnAround(ISLAND_CENTER.x, ISLAND_CENTER.z, { lion: 1, frog: 3 });
+animals.spawnZoo();
 
 // --- Touch support (phones/tablets, including iPad) ------------------------
 // There's no mouse or keyboard on these devices, so pointer lock never
