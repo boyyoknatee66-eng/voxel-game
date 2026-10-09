@@ -33,10 +33,11 @@ export const GATE = { x: 0, z: 84 };
 // pond, facing into the zoo, rather than in the water at dead center.
 export const SPAWN_POINT = { x: 0, z: 36 };
 
-// The guardian statue plaza: directly opposite the entrance gate, on the
-// far side of the pond, so the sightline on arrival reads
-// gate -> pond -> statue. See world/statue.js for the model itself.
-export const STATUE = { x: 0, z: -34 };
+// The guardian statue plaza: directly opposite the entrance gate, as far
+// north of the pond as the gate is south of it, so the main boulevard
+// reads gate -> pond -> statue as one straight, symmetric line all the
+// way to the far end of the island. See world/statue.js for the model.
+export const STATUE = { x: 0, z: -GATE.z };
 export const STATUE_PLAZA_RADIUS = 7;
 
 export const PATH_WIDTH = 4.5;
