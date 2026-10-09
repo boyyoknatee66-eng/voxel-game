@@ -18,6 +18,15 @@ export const BLOCK = {
   PALM_LEAVES: 11,
   MANGO_LEAVES: 12,
   MANGOSTEEN_LEAVES: 13,
+  // Materials for the entrance guardian statue (see world/statue.js). Kept
+  // separate from the natural-terrain palette above.
+  STATUE_BLACK: 14,
+  STATUE_PURPLE: 15,
+  STATUE_PURPLE_DARK: 16,
+  STATUE_RED: 17,
+  STATUE_WHITE: 18,
+  STATUE_SILVER: 19,
+  STATUE_STONE: 20,
 };
 
 // top, bottom, side
@@ -101,6 +110,48 @@ export const BLOCK_DATA = {
     colors: colorSet(0x1f4d33, 0x1f4d33, 0x1f4d33),
     solid: true,
     transparent: true,
+  },
+  [BLOCK.STATUE_BLACK]: {
+    name: 'Statue Armor',
+    colors: colorSet(0x18181d, 0x18181d, 0x121216),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.STATUE_PURPLE]: {
+    name: 'Statue Purple',
+    colors: colorSet(0x7a35c9, 0x7a35c9, 0x6a2cb0),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.STATUE_PURPLE_DARK]: {
+    name: 'Statue Purple (shade)',
+    colors: colorSet(0x4a1f80, 0x4a1f80, 0x3d1a6b),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.STATUE_RED]: {
+    name: 'Statue Red',
+    colors: colorSet(0xc92a35, 0xc92a35, 0xa8222c),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.STATUE_WHITE]: {
+    name: 'Statue White',
+    colors: colorSet(0xdcdcdc, 0xdcdcdc, 0xc9c9c9),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.STATUE_SILVER]: {
+    name: 'Statue Silver',
+    colors: colorSet(0x9aa0a6, 0x9aa0a6, 0x82878d),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.STATUE_STONE]: {
+    name: 'Statue Plinth',
+    colors: colorSet(0x6e6e76, 0x5a5a60, 0x63636a),
+    solid: true,
+    transparent: false,
   },
 };
 

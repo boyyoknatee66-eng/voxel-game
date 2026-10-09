@@ -9,10 +9,12 @@ import {
   POND,
   ZONES,
   GATE,
+  STATUE,
   SEA_LEVEL,
   isOnPath,
   distanceToIsland,
 } from './zoo.js';
+import { getStatueVoxels, STATUE_HALF_SPAN } from './statue.js';
 
 export { ISLAND_CENTER };
 
@@ -123,6 +125,7 @@ export function generateChunk(chunk, seed) {
   scatterTrees(chunk, heights, wx0, wz0);
   plantZooTrees(chunk, heights, wx0, wz0);
   buildGate(chunk, wx0, wz0);
+  buildStatue(chunk, wx0, wz0);
 
   chunk.dirty = true;
 }
@@ -304,5 +307,30 @@ function buildGate(chunk, wx0, wz0) {
     const lx = wx - wx0;
     if (lx < 0 || lx >= CHUNK_SIZE_X) continue;
     chunk.setBlock(lx, ISLAND_HEIGHT + 1 + pillarHeight, lz, BLOCK.PALM_WOOD);
+  }
+}
+
+// The ~10m-tall guardian statue standing in its plaza directly across the
+// pond from the entrance gate (see world/zoo.js for the layout and
+// world/statue.js for the voxel model). Like buildGate, it sits on the
+// flat part of the island so its anchor height is always exactly
+// ISLAND_HEIGHT, and each voxel is placed via its own world-to-local
+// conversion so the statue renders correctly even though it straddles
+// chunk boundaries.
+function buildStatue(chunk, wx0, wz0) {
+  // Cheap reject: skip chunks nowhere near the statue's footprint.
+  const chunkCenterX = wx0 + CHUNK_SIZE_X / 2;
+  const chunkCenterZ = wz0 + CHUNK_SIZE_Z / 2;
+  const reach = STATUE_HALF_SPAN + CHUNK_SIZE_X; // generous margin
+  if (Math.hypot(chunkCenterX - STATUE.x, chunkCenterZ - STATUE.z) > reach) return;
+
+  const baseY = ISLAND_HEIGHT + 1;
+  for (const { dx, dy, dz, block } of getStatueVoxels()) {
+    const lx = STATUE.x + dx - wx0;
+    const lz = STATUE.z + dz - wz0;
+    if (lx < 0 || lx >= CHUNK_SIZE_X || lz < 0 || lz >= CHUNK_SIZE_Z) continue;
+    const ly = baseY + dy;
+    if (ly < 0 || ly >= CHUNK_SIZE_Y) continue;
+    chunk.setBlock(lx, ly, lz, block);
   }
 }
