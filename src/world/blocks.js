@@ -36,6 +36,14 @@ export const BLOCK = {
   GUARDIAN_EYE: 24,
   GUARDIAN_ANTLER: 25,
   GUARDIAN_MOSS: 26,
+  // Materials for the third landmark, the elephant zone's stone guardian
+  // (see world/stoneGuardian.js). An original hulking golem of dark
+  // granite veined with glowing crystal, kept separate from the other
+  // two landmarks' palettes above.
+  STONEG_BODY: 27,
+  STONEG_BODY_LIGHT: 28,
+  STONEG_CRYSTAL: 29,
+  STONEG_CRYSTAL_DARK: 30,
 };
 
 // top, bottom, side
@@ -195,6 +203,30 @@ export const BLOCK_DATA = {
   [BLOCK.GUARDIAN_MOSS]: {
     name: 'Guardian Moss',
     colors: colorSet(0x6f8f3e, 0x6f8f3e, 0x5e7a34),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.STONEG_BODY]: {
+    name: 'Stone Guardian Granite',
+    colors: colorSet(0x4a4a52, 0x4a4a52, 0x3e3e45),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.STONEG_BODY_LIGHT]: {
+    name: 'Stone Guardian Granite (light)',
+    colors: colorSet(0x6b6b74, 0x6b6b74, 0x5c5c64),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.STONEG_CRYSTAL]: {
+    name: 'Stone Guardian Crystal',
+    colors: colorSet(0x4ae8c4, 0x4ae8c4, 0x3bc9a8),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.STONEG_CRYSTAL_DARK]: {
+    name: 'Stone Guardian Crystal (shade)',
+    colors: colorSet(0x2a9a80, 0x2a9a80, 0x22816b),
     solid: true,
     transparent: false,
   },
