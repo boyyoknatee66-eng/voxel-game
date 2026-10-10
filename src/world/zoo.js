@@ -40,6 +40,12 @@ export const SPAWN_POINT = { x: 0, z: 36 };
 export const STATUE = { x: 0, z: -GATE.z };
 export const STATUE_PLAZA_RADIUS = 7;
 
+// A second landmark plaza on its own spoke road, one lane to the left
+// (west) of the entrance statue's boulevard — an original forest-guardian
+// figure. See world/guardian.js for the model.
+export const GUARDIAN = { x: STATUE.x - 30, z: STATUE.z };
+export const GUARDIAN_PLAZA_RADIUS = 6;
+
 export const PATH_WIDTH = 4.5;
 
 // Each path runs from the pond out to a zone (or the gate). Drawn as a
@@ -51,6 +57,7 @@ export const PATH_SEGMENTS = [
   [POND, ZONES.ratInsect],
   [POND, GATE],
   [POND, STATUE],
+  [POND, GUARDIAN],
 ];
 
 export function distanceToSegment(px, pz, ax, az, bx, bz) {
@@ -69,6 +76,8 @@ export function isOnPath(wx, wz) {
   if (Math.hypot(wx - POND.x, wz - POND.z) < POND.radius) return false;
   // Paved plaza around the statue's base.
   if (Math.hypot(wx - STATUE.x, wz - STATUE.z) < STATUE_PLAZA_RADIUS) return true;
+  // Paved plaza around the forest guardian's base.
+  if (Math.hypot(wx - GUARDIAN.x, wz - GUARDIAN.z) < GUARDIAN_PLAZA_RADIUS) return true;
   for (const [a, b] of PATH_SEGMENTS) {
     if (distanceToSegment(wx, wz, a.x, a.z, b.x, b.z) < PATH_WIDTH / 2) return true;
   }

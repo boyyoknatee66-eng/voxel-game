@@ -10,11 +10,13 @@ import {
   ZONES,
   GATE,
   STATUE,
+  GUARDIAN,
   SEA_LEVEL,
   isOnPath,
   distanceToIsland,
 } from './zoo.js';
 import { getStatueVoxels, STATUE_HALF_SPAN } from './statue.js';
+import { getGuardianVoxels, GUARDIAN_HALF_SPAN } from './guardian.js';
 
 export { ISLAND_CENTER };
 
@@ -126,6 +128,7 @@ export function generateChunk(chunk, seed) {
   plantZooTrees(chunk, heights, wx0, wz0);
   buildGate(chunk, wx0, wz0);
   buildStatue(chunk, wx0, wz0);
+  buildGuardian(chunk, wx0, wz0);
 
   chunk.dirty = true;
 }
@@ -328,6 +331,27 @@ function buildStatue(chunk, wx0, wz0) {
   for (const { dx, dy, dz, block } of getStatueVoxels()) {
     const lx = STATUE.x + dx - wx0;
     const lz = STATUE.z + dz - wz0;
+    if (lx < 0 || lx >= CHUNK_SIZE_X || lz < 0 || lz >= CHUNK_SIZE_Z) continue;
+    const ly = baseY + dy;
+    if (ly < 0 || ly >= CHUNK_SIZE_Y) continue;
+    chunk.setBlock(lx, ly, lz, block);
+  }
+}
+
+// The second landmark, an original ~10m-tall forest guardian standing in
+// its own plaza one spoke road to the left of the entrance statue (see
+// world/zoo.js for the layout and world/guardian.js for the voxel model).
+// Same placement approach as buildStatue above.
+function buildGuardian(chunk, wx0, wz0) {
+  const chunkCenterX = wx0 + CHUNK_SIZE_X / 2;
+  const chunkCenterZ = wz0 + CHUNK_SIZE_Z / 2;
+  const reach = GUARDIAN_HALF_SPAN + CHUNK_SIZE_X;
+  if (Math.hypot(chunkCenterX - GUARDIAN.x, chunkCenterZ - GUARDIAN.z) > reach) return;
+
+  const baseY = ISLAND_HEIGHT + 1;
+  for (const { dx, dy, dz, block } of getGuardianVoxels()) {
+    const lx = GUARDIAN.x + dx - wx0;
+    const lz = GUARDIAN.z + dz - wz0;
     if (lx < 0 || lx >= CHUNK_SIZE_X || lz < 0 || lz >= CHUNK_SIZE_Z) continue;
     const ly = baseY + dy;
     if (ly < 0 || ly >= CHUNK_SIZE_Y) continue;

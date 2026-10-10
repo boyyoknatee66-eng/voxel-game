@@ -27,6 +27,15 @@ export const BLOCK = {
   STATUE_WHITE: 18,
   STATUE_SILVER: 19,
   STATUE_STONE: 20,
+  // Materials for the second landmark, the forest guardian (see
+  // world/guardian.js). An original tall woodland-spirit design, kept
+  // separate from the entrance statue's palette above.
+  GUARDIAN_BARK: 21,
+  GUARDIAN_BARK_DARK: 22,
+  GUARDIAN_VINE: 23,
+  GUARDIAN_EYE: 24,
+  GUARDIAN_ANTLER: 25,
+  GUARDIAN_MOSS: 26,
 };
 
 // top, bottom, side
@@ -150,6 +159,42 @@ export const BLOCK_DATA = {
   [BLOCK.STATUE_STONE]: {
     name: 'Statue Plinth',
     colors: colorSet(0x6e6e76, 0x5a5a60, 0x63636a),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.GUARDIAN_BARK]: {
+    name: 'Guardian Bark',
+    colors: colorSet(0x4a3626, 0x4a3626, 0x3e2c1e),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.GUARDIAN_BARK_DARK]: {
+    name: 'Guardian Bark (shade)',
+    colors: colorSet(0x2e2117, 0x2e2117, 0x241a12),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.GUARDIAN_VINE]: {
+    name: 'Guardian Vine',
+    colors: colorSet(0x4f7a2e, 0x4f7a2e, 0x426924),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.GUARDIAN_EYE]: {
+    name: 'Guardian Eye',
+    colors: colorSet(0xe8c04a, 0xe8c04a, 0xd6ab32),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.GUARDIAN_ANTLER]: {
+    name: 'Guardian Antler',
+    colors: colorSet(0xcbb896, 0xcbb896, 0xb8a37e),
+    solid: true,
+    transparent: false,
+  },
+  [BLOCK.GUARDIAN_MOSS]: {
+    name: 'Guardian Moss',
+    colors: colorSet(0x6f8f3e, 0x6f8f3e, 0x5e7a34),
     solid: true,
     transparent: false,
   },
