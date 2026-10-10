@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { POND, ZONES, SEA_LEVEL } from './zoo.js';
+import { POND, ZONES, GUARDIAN, SEA_LEVEL } from './zoo.js';
+import { makeGuardianMesh } from './guardian.js';
 
 // Simple low-poly "voxel style" animal models built from boxes, matching
 // the blocky look of the terrain.
@@ -290,6 +291,10 @@ export const ANIMAL_TYPES = {
   hippo: { build: makeHippo, speed: 0.9, scale: 1, movement: 'ground', wanderRadius: 4 },
   elephant: { build: makeElephant, speed: 1.0, scale: 0.85, movement: 'ground', wanderRadius: 9 },
   rat: { build: makeRat, speed: 1.8, scale: 1, movement: 'ground', wanderRadius: 6 },
+  // Landmarks
+  // Wanders a ~10x10-block plaza around its spawn point instead of a
+  // single fixed pose — see world/guardian.js for the model.
+  forestGuardian: { build: makeGuardianMesh, speed: 0.5, scale: 1, movement: 'ground', wanderRadius: 5 },
   // Insects
   butterfly: { build: makeButterfly, speed: 1.4, scale: 1, movement: 'flying', wanderRadius: 14, hover: [0.6, 1.4] },
   centipede: { build: makeCentipede, speed: 0.6, scale: 1, movement: 'ground', wanderRadius: 3 },
@@ -457,6 +462,11 @@ export class AnimalManager {
     this._spawnPond('whale', 1);
     this._spawnPond('starfish', 3);
     this._spawnPond('jellyfish', 3);
+
+    // The forest guardian wanders its own plaza, starting right at its
+    // center (radius 0 at spawn — Animal.update then lets it roam the
+    // full wanderRadius from there).
+    this._spawnNear('forestGuardian', GUARDIAN.x, GUARDIAN.z, 1, 0);
 
     // Insects in the burrow & bug garden.
     this._spawnNear('butterfly', ZONES.ratInsect.x, ZONES.ratInsect.z, 5, 14);
